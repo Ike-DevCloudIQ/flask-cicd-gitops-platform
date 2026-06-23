@@ -18,8 +18,8 @@ written for a journey from **beginner → expert**. Follow along stage by stage.
 |---|-------|---------|--------|
 | 0 | Repo bootstrap | Structure, `.gitignore`, README | ✅ Done |
 | 1 | Flask app + tests | The application to ship | ✅ Done |
-| 2 | Docker | Containerize (hardened image) | ⏳ Next |
-| 3 | Kubernetes | Deploy manifests (Kustomize) | ⏳ |
+| 2 | Docker | Containerize (hardened image) | ✅ Done |
+| 3 | Kubernetes | Deploy manifests (Kustomize) | ⏳ Next |
 | 4 | Terraform | Provision AWS infra (modular) | ⏳ |
 | 5 | Ansible | Configure EC2 (dynamic inventory) | ⏳ |
 | 6 | Jenkins CI | Build · scan · push · update manifest | ⏳ |
@@ -85,21 +85,25 @@ python app.py         # http://localhost:5000
 
 ---
 
-## ⏳ Stage 2 — Docker (containerization)
+## ✅ Stage 2 — Docker (containerization)
 
 **Goal:** a small, secure container image.
 
-### Planned steps
-1. Multi-stage `Dockerfile` (build deps separated from runtime).
-2. Run as a **non-root user**.
-3. Use `gunicorn` as the entrypoint.
-4. Add a `HEALTHCHECK` instruction.
-5. Add `.dockerignore` to keep the build context lean.
+### Completed
+1. ✅ Single-stage `Dockerfile` (pragmatic approach for macOS Docker).
+2. ✅ Non-root user (`app`).
+3. ✅ `gunicorn` as the entrypoint.
+4. ✅ `HEALTHCHECK` instruction for K8s probes.
+5. ✅ `.dockerignore` to keep build context lean.
+6. ✅ **SSL workaround:** added `--trusted-host` flags for macOS Docker Desktop.
 
 ### Validation
 ```bash
-docker build -t emekaezedozie276/flask-app:dev -f docker/Dockerfile .
-docker run -p 5000:5000 emekaezedozie276/flask-app:dev
+docker build -t emekaezedozie276/flask-app:stage2 -f docker/Dockerfile .
+docker run -p 5000:5000 emekaezedozie276/flask-app:stage2
+curl http://localhost:5000/health      # ✅ 200 {"status":"healthy"}
+curl http://localhost:5000/            # ✅ 200 HTML page
+docker tag emekaezedozie276/flask-app:stage2 emekaezedozie276/flask-app:v0.2.0
 ```
 
 ---
@@ -194,4 +198,4 @@ flask-cicd-gitops-platform/
 
 ---
 
-> 🔄 This document is updated as each stage completes. Current position: **Stage 1 done — Stage 2 next.**
+> 🔄 This document is updated as each stage completes. Current position: **Stage 2 done — Stage 3 next.**
