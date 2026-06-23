@@ -1,0 +1,15 @@
+.git
+.github
+**/.DS_Store
+**/.venv
+**/__pycache__
+**/.pytest_cache
+**/*.pyc
+**/*.pyo
+**/*.pyd
+**/*.log
+terraform/.terraform
+terraform/*.tfstate
+terraform/*.tfstate.*
+node_modules
+docs/images
