@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ app_name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <main class="card">
+        <h1>🚀 {{ app_name }}</h1>
+        <p>Deployed via a full CI/CD &amp; GitOps pipeline.</p>
+        <span class="badge">env: {{ environment }}</span>
+        <ul class="stack">
+            <li>Docker</li>
+            <li>Kubernetes</li>
+            <li>Terraform</li>
+            <li>Ansible</li>
+            <li>Jenkins</li>
+            <li>ArgoCD</li>
+        </ul>
+    </main>
+</body>
+</html>
