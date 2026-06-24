@@ -1,0 +1,113 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// Jenkinsfile  —  flask-cicd-gitops-platform  CI Pipeline
+//
+// Triggered by: any push to the main branch in GitHub
+// Agent:        Jenkins slave (label: "slave")
+//
+// Pipeline stages:
+//   1  Checkout     — clone source from GitHub
+//   2  Test         — run Flask unit tests
+//   3  Build        — docker build (tagged with BUILD_NUMBER)
+//   4  Scan         — Trivy vulnerability scan (fails on CRITICAL CVEs)
+//   5  Push         — push approved image to Docker Hub
+//   6  Update       — replace image tag in K8s overlay manifest
+//   7  Publish      — git push manifest change → triggers ArgoCD
+//
+// Environment variables expected in Jenkins:
+//   DOCKER_IMAGE      Full image name   emekaezedozie276/flask-app
+//   DOCKERFILE_PATH   Relative path     docker/Dockerfile
+//   OVERLAY_PATCH     Manifest to edit  kubernetes/overlays/dev/deployment-patch.yaml
+//
+// Jenkins credentials required:
+//   dockerhub-credentials   Docker Hub username + password (or access token)
+//   github-credentials      GitHub username + personal access token
+// ─────────────────────────────────────────────────────────────────────────────
+
+@Library('flask-cicd-shared-library') _
+
+pipeline {
+
+    agent { label 'slave' }
+
+    environment {
+        DOCKER_IMAGE    = 'emekaezedozie276/flask-app'
+        DOCKERFILE_PATH = 'docker/Dockerfile'
+        OVERLAY_PATCH   = 'kubernetes/overlays/dev/deployment-patch.yaml'
+    }
+
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+        disableConcurrentBuilds()
+        timeout(time: 30, unit: 'MINUTES')
+    }
+
+    triggers {
+        githubPush()
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                checkout scm
+                sh 'git log -1 --oneline'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo 'Installing dependencies and running unit tests'
+                sh '''
+                    python3 -m venv .venv
+                    . .venv/bin/activate
+                    pip install -r app/requirements-dev.txt
+                    cd app && python -m pytest tests/ -v --tb=short
+                '''
+            }
+        }
+
+        stage('Build') {
+            steps {
+                buildImage(env.DOCKER_IMAGE, env.BUILD_NUMBER, env.DOCKERFILE_PATH)
+            }
+        }
+
+        stage('Scan') {
+            steps {
+                scanImage(env.DOCKER_IMAGE, env.BUILD_NUMBER)
+            }
+        }
+
+        stage('Push') {
+            steps {
+                pushImage(env.DOCKER_IMAGE, env.BUILD_NUMBER)
+            }
+        }
+
+        stage('Update Manifest') {
+            steps {
+                updateManifest(env.DOCKER_IMAGE, env.BUILD_NUMBER, env.OVERLAY_PATCH)
+            }
+        }
+
+        stage('Publish Manifest') {
+            steps {
+                pushManifest(env.BUILD_NUMBER)
+            }
+        }
+
+    }
+
+    post {
+        success {
+            echo "Pipeline completed. Image: ${env.DOCKER_IMAGE}:${env.BUILD_NUMBER}"
+            echo "ArgoCD will now detect the manifest change and deploy to Kubernetes."
+        }
+        failure {
+            echo "Pipeline failed at stage: ${env.STAGE_NAME}. Check logs above."
+        }
+        always {
+            cleanWs()
+        }
+    }
+}

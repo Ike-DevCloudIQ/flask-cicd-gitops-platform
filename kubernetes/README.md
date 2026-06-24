@@ -149,3 +149,12 @@ What I learned in Stage 3:
 - How requests and limits improve cluster stability
 - How environment-specific patches keep config clean
 - How to debug Kustomize patch target errors
+
+## 👤 Author
+
+**Ikenna Ubah** — Cloud / DevSecOps Platform Engineer
+
+[![GitHub](https://img.shields.io/badge/GitHub-Ike--DevCloudIQ-181717?logo=github)](https://github.com/Ike-DevCloudIQ)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Ikenna%20Ubah-0A66C2?logo=linkedin&logoColor=white)](https://www.linkedin.com/in/ikenna2/)
+
+> ⭐ If you found this project useful or insightful, please consider starring the repository.

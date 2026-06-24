@@ -50,8 +50,8 @@ flask-cicd-gitops-platform/
 | 2 · Docker | ✅ |
 | 3 · Kubernetes | ✅ |
 | 4 · Terraform | ✅ |
-| 5 · Ansible | 🔄 |
-| 6 · Jenkins CI | ⏳ |
+| 5 · Ansible | ✅ |
+| 6 · Jenkins CI | 🔄 |
 | 7 · ArgoCD | ⏳ |
 
 ## ▶️ Run the app locally

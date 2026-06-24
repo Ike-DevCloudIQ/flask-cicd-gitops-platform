@@ -22,7 +22,7 @@ written for a journey from **beginner → expert**. Follow along stage by stage.
 | 3 | Kubernetes | Deploy manifests (Kustomize) | ✅ Done |
 | 4 | Terraform | Provision AWS infra (modular) | ✅ Done |
 | 5 | Ansible | Configure EC2 (dynamic inventory) | ✅ Done |
-| 6 | Jenkins CI | Build · scan · push · update manifest | ⏳ |
+| 6 | Jenkins CI | Build · scan · push · update manifest | 🔄 In progress |
 | 7 | ArgoCD | GitOps continuous delivery | ⏳ |
 | 8 | Wiring + hardening | End-to-end glue, docs, security | ⏳ |
 
@@ -198,7 +198,7 @@ flask-cicd-gitops-platform/
 
 ---
 
-> 🔄 This document is updated as each stage completes. Current position: **Stage 5 done — Stage 6 next.**
+> 🔄 This document is updated as each stage completes. Current position: **Stage 5 done — Stage 6 in progress.**
 
 ## 👤 Author
 

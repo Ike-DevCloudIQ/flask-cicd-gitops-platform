@@ -1,0 +1,7 @@
+// jenkins/shared-library/src is empty — all reusable logic lives in vars/ as
+// global pipeline functions. This is the recommended Jenkins shared library
+// layout for small-to-medium libraries:
+//
+// vars/          Global variables and steps (loaded automatically)
+// src/           Optional: Groovy classes for complex helper logic
+// resources/     Optional: non-Groovy files accessible via libraryResource()
