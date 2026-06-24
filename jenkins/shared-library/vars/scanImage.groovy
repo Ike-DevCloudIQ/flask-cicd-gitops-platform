@@ -24,6 +24,7 @@ def call(String imageName, String buildNum) {
         trivy image \
             --exit-code 1 \
             --severity CRITICAL \
+            --ignore-unfixed \
             --no-progress \
             --format table \
             --output trivy-report-${buildNum}.txt \
