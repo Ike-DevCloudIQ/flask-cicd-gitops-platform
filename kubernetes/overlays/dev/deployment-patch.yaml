@@ -9,7 +9,7 @@ spec:
     spec:
       containers:
       - name: flask-app
-        image: emekaezedozie276/flask-app:93
+        image: emekaezedozie276/flask-app:94
         resources:
           requests:
             cpu: 50m
