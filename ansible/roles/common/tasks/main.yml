@@ -1,0 +1,17 @@
+---
+- name: Update package metadata and upgrade installed packages
+  ansible.builtin.dnf:
+    name: "*"
+    state: latest
+    update_cache: true
+
+- name: Install common utility packages
+  ansible.builtin.dnf:
+    name: "{{ base_packages }}"
+    state: present
+
+- name: Ensure chronyd is enabled and running
+  ansible.builtin.service:
+    name: chronyd
+    state: started
+    enabled: true

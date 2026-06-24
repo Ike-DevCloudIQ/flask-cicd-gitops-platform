@@ -47,10 +47,10 @@ flask-cicd-gitops-platform/
 |-------|--------|
 | 0 · Repo bootstrap | ✅ |
 | 1 · Flask app + tests | ✅ |
-| 2 · Docker | ⏳ |
-| 3 · Kubernetes | ⏳ |
-| 4 · Terraform | ⏳ |
-| 5 · Ansible | ⏳ |
+| 2 · Docker | ✅ |
+| 3 · Kubernetes | ✅ |
+| 4 · Terraform | ✅ |
+| 5 · Ansible | 🔄 |
 | 6 · Jenkins CI | ⏳ |
 | 7 · ArgoCD | ⏳ |
 
@@ -63,3 +63,11 @@ pip install -r requirements-dev.txt
 pytest                       # run tests
 python app.py                # http://localhost:5000
 ```
+## 👤 Author
+
+**Ikenna Ubah** — DevOps & Platform Engineer
+
+[![GitHub](https://img.shields.io/badge/GitHub-Ike--DevCloudIQ-181717?logo=github)](https://github.com/Ike-DevCloudIQ)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Ikenna%20Ubah-0A66C2?logo=linkedin&logoColor=white)](https://www.linkedin.com/in/ikenna2/)
+
+> ⭐ If you found this project useful or insightful, please consider starring the repository.

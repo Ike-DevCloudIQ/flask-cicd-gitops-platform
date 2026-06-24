@@ -1,0 +1,27 @@
+---
+- name: Install Docker engine
+  ansible.builtin.dnf:
+    name: docker
+    state: present
+
+- name: Ensure docker group exists
+  ansible.builtin.group:
+    name: docker
+    state: present
+
+- name: Add ec2-user to docker group
+  ansible.builtin.user:
+    name: ec2-user
+    groups: docker
+    append: true
+
+- name: Add jenkins user to docker group if present
+  ansible.builtin.command: usermod -aG docker jenkins
+  changed_when: false
+  failed_when: false
+
+- name: Enable and start Docker
+  ansible.builtin.service:
+    name: docker
+    state: started
+    enabled: true

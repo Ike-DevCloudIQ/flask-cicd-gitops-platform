@@ -8,7 +8,7 @@ written for a journey from **beginner → expert**. Follow along stage by stage.
 | Repository | `flask-cicd-gitops-platform` |
 | GitHub owner | `Ike-DevCloudIQ` |
 | Container image | `emekaezedozie276/flask-app` (Docker Hub) |
-| Cloud | AWS (`us-east-1`) |
+| Cloud | AWS (`eu-west-1`) |
 
 ---
 
@@ -19,9 +19,9 @@ written for a journey from **beginner → expert**. Follow along stage by stage.
 | 0 | Repo bootstrap | Structure, `.gitignore`, README | ✅ Done |
 | 1 | Flask app + tests | The application to ship | ✅ Done |
 | 2 | Docker | Containerize (hardened image) | ✅ Done |
-| 3 | Kubernetes | Deploy manifests (Kustomize) | ⏳ Next |
-| 4 | Terraform | Provision AWS infra (modular) | ⏳ |
-| 5 | Ansible | Configure EC2 (dynamic inventory) | ⏳ |
+| 3 | Kubernetes | Deploy manifests (Kustomize) | ✅ Done |
+| 4 | Terraform | Provision AWS infra (modular) | ✅ Done |
+| 5 | Ansible | Configure EC2 (dynamic inventory) | ✅ Done |
 | 6 | Jenkins CI | Build · scan · push · update manifest | ⏳ |
 | 7 | ArgoCD | GitOps continuous delivery | ⏳ |
 | 8 | Wiring + hardening | End-to-end glue, docs, security | ⏳ |
@@ -108,7 +108,7 @@ docker tag emekaezedozie276/flask-app:stage2 emekaezedozie276/flask-app:v0.2.0
 
 ---
 
-## ⏳ Stage 3 — Kubernetes (Kustomize)
+## ✅ Stage 3 — Kubernetes (Kustomize)
 
 **Goal:** declarative deployment manifests with environment overlays.
 
@@ -120,7 +120,7 @@ docker tag emekaezedozie276/flask-app:stage2 emekaezedozie276/flask-app:v0.2.0
 
 ---
 
-## ⏳ Stage 4 — Terraform (AWS infrastructure)
+## ✅ Stage 4 — Terraform (AWS infrastructure)
 
 **Goal:** reproducible AWS infra via real, reusable modules.
 
@@ -135,7 +135,7 @@ docker tag emekaezedozie276/flask-app:stage2 emekaezedozie276/flask-app:v0.2.0
 
 ---
 
-## ⏳ Stage 5 — Ansible (configuration management)
+## ✅ Stage 5 — Ansible (configuration management)
 
 **Goal:** configure the EC2 instances automatically.
 
@@ -198,4 +198,13 @@ flask-cicd-gitops-platform/
 
 ---
 
-> 🔄 This document is updated as each stage completes. Current position: **Stage 2 done — Stage 3 next.**
+> 🔄 This document is updated as each stage completes. Current position: **Stage 5 done — Stage 6 next.**
+
+## 👤 Author
+
+**Ikenna Ubah** — DevOps & Platform Engineer
+
+[![GitHub](https://img.shields.io/badge/GitHub-Ike--DevCloudIQ-181717?logo=github)](https://github.com/Ike-DevCloudIQ)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Ikenna%20Ubah-0A66C2?logo=linkedin&logoColor=white)](https://www.linkedin.com/in/ikenna2/)
+
+> ⭐ If you found this project useful or insightful, please consider starring the repository.

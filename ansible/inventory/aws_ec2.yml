@@ -1,0 +1,24 @@
+---
+plugin: amazon.aws.aws_ec2
+regions:
+  - eu-west-1
+
+filters:
+  tag:Project: flask-cicd-gitops-platform
+  tag:Environment: dev
+  instance-state-name: running
+
+hostnames:
+  - ip-address
+  - private-ip-address
+
+groups:
+  jenkins_master: ec2_tags.Role is defined and ec2_tags.Role == 'jenkins-master'
+  jenkins_slave: ec2_tags.Role is defined and ec2_tags.Role == 'jenkins-slave'
+
+keyed_groups:
+  - key: ec2_tags.Environment
+    prefix: env
+    separator: "_"
+
+strict: false

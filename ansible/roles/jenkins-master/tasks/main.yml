@@ -1,0 +1,35 @@
+---
+- name: Import Jenkins RPM signing key
+  ansible.builtin.rpm_key:
+    state: present
+    key: https://pkg.jenkins.io/rpm-stable/jenkins.io.key
+
+- name: Add Jenkins repository
+  ansible.builtin.yum_repository:
+    name: jenkins
+    description: Jenkins Stable Repo
+    baseurl: https://pkg.jenkins.io/rpm-stable
+    enabled: true
+    gpgcheck: false
+    gpgkey: https://pkg.jenkins.io/rpm-stable/jenkins.io.key
+
+- name: Install Jenkins
+  ansible.builtin.dnf:
+    name: jenkins
+    state: present
+
+- name: Reset failed Jenkins service state
+  ansible.builtin.command: systemctl reset-failed jenkins
+  changed_when: false
+
+- name: Ensure Jenkins service is enabled and started
+  ansible.builtin.service:
+    name: jenkins
+    state: started
+    enabled: true
+
+- name: Wait for Jenkins HTTP port to become reachable
+  ansible.builtin.wait_for:
+    port: "{{ jenkins_http_port }}"
+    host: 127.0.0.1
+    timeout: 120

@@ -1,0 +1,19 @@
+---
+- name: Create jenkins agent user
+  ansible.builtin.user:
+    name: jenkins
+    shell: /bin/bash
+    create_home: true
+
+- name: Create Jenkins agent working directory
+  ansible.builtin.file:
+    path: "{{ jenkins_agent_workdir }}"
+    state: directory
+    owner: jenkins
+    group: jenkins
+    mode: "0755"
+
+- name: Ensure Java runtime is present for Jenkins agent
+  ansible.builtin.dnf:
+    name: java-17-amazon-corretto-headless
+    state: present

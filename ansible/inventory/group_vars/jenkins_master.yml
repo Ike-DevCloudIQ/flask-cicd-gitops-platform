@@ -1,0 +1,7 @@
+---
+jenkins_http_port: 8080
+jenkins_admin_user: admin
+jenkins_plugins:
+  - git
+  - workflow-aggregator
+  - configuration-as-code

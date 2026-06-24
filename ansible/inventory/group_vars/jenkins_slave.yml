@@ -1,0 +1,4 @@
+---
+ansible_ssh_common_args: >-
+  -o ProxyCommand="ssh -W %h:%p -q -i ~/.ssh/flask-cicd-gitops-dev-key.pem ec2-user@54.76.201.117"
+jenkins_agent_workdir: /opt/jenkins-agent

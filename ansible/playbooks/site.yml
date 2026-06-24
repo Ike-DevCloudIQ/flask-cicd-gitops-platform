@@ -1,0 +1,23 @@
+---
+- name: Baseline setup for all Jenkins nodes
+  hosts: jenkins_master:jenkins_slave
+  become: true
+  gather_facts: true
+  roles:
+    - common
+    - docker
+    - java
+
+- name: Configure Jenkins master
+  hosts: jenkins_master
+  become: true
+  gather_facts: true
+  roles:
+    - jenkins-master
+
+- name: Configure Jenkins slave
+  hosts: jenkins_slave
+  become: true
+  gather_facts: true
+  roles:
+    - jenkins-slave
