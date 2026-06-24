@@ -19,6 +19,7 @@
 11. [GitOps Integration — How Jenkins Triggers ArgoCD](#11-gitops-integration--how-jenkins-triggers-argocd)
 12. [Key Jenkins Concepts for Interviews](#12-key-jenkins-concepts-for-interviews)
 13. [Troubleshooting Reference](#13-troubleshooting-reference)
+14. [Jenkins UI Click-by-Click Playbook](#14-jenkins-ui-click-by-click-playbook)
 
 ---
 
@@ -663,3 +664,188 @@ Ensure `[skip ci]` is present in the commit message inside `pushManifest.groovy`
 *Stage 6 complete when: pipeline runs end-to-end from a code push, a new Docker image lands in Docker Hub tagged with the build number, and the Kubernetes overlay manifest is updated in Git.*
 
 *Next: [Stage 7 — ArgoCD GitOps](../argocd/README.md)*
+
+---
+
+## 14. Jenkins UI Click-by-Click Playbook
+
+This section is the exact UI execution sequence for this project. Follow it in order without skipping steps.
+
+### A) Register the Shared Library (exact clicks)
+
+1. Open Jenkins: `http://54.76.201.117:8080`
+2. Left menu: click **Manage Jenkins**
+3. Click **System** (or **Configure System** depending on Jenkins version)
+4. Scroll to **Global Pipeline Libraries**
+5. Click **Add**
+6. Fill fields exactly:
+
+| Field | Value |
+|---|---|
+| Name | `flask-cicd-shared-library` |
+| Default version | `main` |
+| Allow default version to be overridden | unchecked |
+| Include @Library changes in job recent changes | checked |
+| Retrieval method | Modern SCM |
+| Source Code Management | Git |
+| Project Repository | `https://github.com/Ike-DevCloudIQ/flask-cicd-gitops-platform.git` |
+| Credentials | `github-credentials` |
+| Library Path | `jenkins/shared-library` |
+
+7. Click **Save**
+
+Validation:
+- Open any pipeline that contains `@Library('flask-cicd-shared-library') _`
+- If library is registered correctly, Jenkins will compile without `No such DSL method` errors for `buildImage`, `scanImage`, etc.
+
+### B) Add Docker Hub and GitHub Credentials (exact clicks)
+
+1. **Manage Jenkins → Credentials**
+2. Click **System**
+3. Click **Global credentials (unrestricted)**
+4. Click **Add Credentials**
+
+Create credential 1:
+
+| Field | Value |
+|---|---|
+| Kind | Username with password |
+| Scope | Global |
+| Username | your Docker Hub username |
+| Password | Docker Hub access token |
+| ID | `dockerhub-credentials` |
+| Description | Docker Hub for CI image push |
+
+Click **Create**.
+
+Create credential 2 (repeat Add Credentials):
+
+| Field | Value |
+|---|---|
+| Kind | Username with password |
+| Scope | Global |
+| Username | your GitHub username |
+| Password | GitHub PAT (`repo` scope) |
+| ID | `github-credentials` |
+| Description | GitHub PAT for manifest push |
+
+Click **Create**.
+
+Important:
+- Do not use account passwords where tokens are expected.
+- IDs must match exactly what is referenced in Groovy: `dockerhub-credentials`, `github-credentials`.
+
+### C) Connect the Slave Node over SSH (exact clicks)
+
+#### C1) Create the SSH private key credential for the node
+
+1. Navigate to **Manage Jenkins → Credentials → System → Global credentials**
+2. Click **Add Credentials**
+3. Fill as below:
+
+| Field | Value |
+|---|---|
+| Kind | SSH Username with private key |
+| Scope | Global |
+| ID | `jenkins-slave-ssh` |
+| Description | SSH key for Jenkins slave 10.0.10.129 |
+| Username | `ec2-user` |
+| Private Key | Enter directly |
+| Key body | paste full content of `~/.ssh/flask-cicd-gitops-dev-key.pem` |
+| Passphrase | empty (unless your key has one) |
+
+4. Click **Create**
+
+Note:
+- Do not select `dockerhub-credentials` or `github-credentials` for node SSH. Those are username/password credentials, not private key credentials.
+
+#### C2) Create/configure the node
+
+1. **Manage Jenkins → Nodes**
+2. Click **New Node**
+3. Node name: `jenkins-slave`
+4. Select **Permanent Agent**
+5. Click **Create**
+
+Fill node config exactly:
+
+| Field | Value |
+|---|---|
+| Number of executors | `2` |
+| Remote root directory | `/opt/jenkins-agent` |
+| Labels | `slave` |
+| Usage | Only build jobs with label expressions matching this node |
+| Launch method | Launch agents via SSH |
+| Host | `10.0.10.129` |
+| Credentials | `jenkins-slave-ssh` |
+| Host Key Verification Strategy | Non verifying Verification Strategy (for initial setup) |
+| Availability | Keep this agent online as much as possible |
+
+6. Click **Save**
+
+#### C3) Launch and verify agent
+
+1. Open node `jenkins-slave`
+2. Click **Launch agent** (if it does not auto-launch)
+3. Watch logs for success markers:
+    - `SSH connection successful`
+    - `Agent successfully connected and online`
+
+If it fails:
+- Confirm security group rule allows master -> slave SSH on port 22.
+- Confirm credential type is **SSH Username with private key**.
+- Confirm username is `ec2-user`.
+
+### D) Create the Pipeline Job (exact clicks)
+
+1. Dashboard: click **New Item**
+2. Name: `flask-cicd-pipeline`
+3. Select **Pipeline**
+4. Click **OK**
+
+Configure:
+
+| Section | Field | Value |
+|---|---|---|
+| General | GitHub project | `https://github.com/Ike-DevCloudIQ/flask-cicd-gitops-platform` |
+| Build Triggers | GitHub hook trigger for GITScm polling | checked |
+| Pipeline | Definition | Pipeline script from SCM |
+| Pipeline | SCM | Git |
+| Pipeline | Repository URL | `https://github.com/Ike-DevCloudIQ/flask-cicd-gitops-platform.git` |
+| Pipeline | Credentials | `github-credentials` |
+| Pipeline | Branch Specifier | `*/main` |
+| Pipeline | Script Path | `jenkins/Jenkinsfile` |
+
+5. Click **Save**
+6. Click **Build Now** for first validation run
+
+### E) Configure GitHub Webhook (exact clicks)
+
+1. GitHub repository: **Settings → Webhooks → Add webhook**
+2. Set:
+
+| Field | Value |
+|---|---|
+| Payload URL | `http://54.76.201.117:8080/github-webhook/` |
+| Content type | `application/json` |
+| Secret | optional (recommended in production) |
+| Events | Just the push event |
+| Active | checked |
+
+3. Click **Add webhook**
+
+Validation:
+- Push a small commit to `main`
+- In Jenkins, verify build triggers automatically within a few seconds
+- In GitHub webhook delivery log, status should be 200/201
+
+### F) First Run Success Criteria
+
+Your setup is correct when all these are true:
+
+1. Pipeline starts automatically after a GitHub push.
+2. Build executes on node labeled `slave`.
+3. Docker image pushed as `emekaezedozie276/flask-app:<BUILD_NUMBER>`.
+4. `kubernetes/overlays/dev/deployment-patch.yaml` is updated by Jenkins.
+5. Jenkins pushes manifest commit to `main` with `[skip ci]` in message.
+

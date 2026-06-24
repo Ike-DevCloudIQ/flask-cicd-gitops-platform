@@ -11,10 +11,14 @@
 def call(String imageName, String buildNum) {
     echo "Scanning image: ${imageName}:${buildNum}"
     sh """
+        TRIVY_BIN_DIR="\$WORKSPACE/.bin"
+        export PATH="\$TRIVY_BIN_DIR:\$PATH"
+
         # Install Trivy if not already present on the agent
         if ! command -v trivy &>/dev/null; then
+            mkdir -p "\$TRIVY_BIN_DIR"
             curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh \
-                | sh -s -- -b /usr/local/bin
+                | sh -s -- -b "\$TRIVY_BIN_DIR"
         fi
 
         trivy image \
