@@ -22,7 +22,7 @@ written for a journey from **beginner → expert**. Follow along stage by stage.
 | 3 | Kubernetes | Deploy manifests (Kustomize) | ✅ Done |
 | 4 | Terraform | Provision AWS infra (modular) | ✅ Done |
 | 5 | Ansible | Configure EC2 (dynamic inventory) | ✅ Done |
-| 6 | Jenkins CI | Build · scan · push · update manifest | 🔄 In progress |
+| 6 | Jenkins CI | Build · scan · push · update manifest | ✅ Done |
 | 7 | ArgoCD | GitOps continuous delivery | ⏳ |
 | 8 | Wiring + hardening | End-to-end glue, docs, security | ⏳ |
 
@@ -146,16 +146,36 @@ docker tag emekaezedozie276/flask-app:stage2 emekaezedozie276/flask-app:v0.2.0
 
 ---
 
-## ⏳ Stage 6 — Jenkins CI
+## ✅ Stage 6 — Jenkins CI
 
 **Goal:** automated build → scan → push → manifest update.
 
-### Planned steps
-1. `Jenkinsfile` (declarative pipeline).
-2. Shared library `vars/`: `buildImage`, `scanImage` (Trivy), `pushImage`,
-   `updateManifest`, `pushManifest`.
-3. Tag images with the build number (no `latest`).
-4. Commit the new image tag back to the K8s manifests → triggers ArgoCD.
+### What was built
+1. `jenkins/Jenkinsfile` — 7-stage declarative pipeline on a slave agent.
+2. `jenkins/shared-library/vars/` — 5 reusable Groovy steps: `buildImage`, `scanImage`, `pushImage`, `updateManifest`, `pushManifest`.
+3. Images tagged with `BUILD_NUMBER` (never `latest`).
+4. Trivy scans image before push — fails only on CRITICAL CVEs with available fixes (`--ignore-unfixed`).
+5. Manifest commit pushed back to `main` with `[skip ci]` to trigger ArgoCD without looping.
+
+### Issues fixed during execution
+| Issue | Root cause | Fix |
+|---|---|---|
+| `Library expected to contain src or vars` | Library path not set in Jenkins | Set Library Path to `jenkins/shared-library` in Global Pipeline Libraries |
+| Agent offline | Wrong credential type selected for node | Created `jenkins-slave-ssh` (SSH Username with private key), set host verification to Non verifying |
+| `Permission denied` on `/opt/jenkins-agent` | Directory owned by root | `sudo chown -R ec2-user:ec2-user /opt/jenkins-agent` on slave |
+| `install: cannot create /usr/local/bin/trivy` | Jenkins user cannot write system dirs | Trivy now installs to `$WORKSPACE/.bin` |
+| Pipeline failed on scan | Base image CVEs with no available fix | Added `--ignore-unfixed` to Trivy — only blocks on patchable CRITICAL CVEs |
+| Docker Hub unauthorized | Account password used instead of PAT | Updated `dockerhub-credentials` with Docker Hub personal access token |
+
+### Validated pipeline run (build #7)
+- ✅ Checkout — commit `ad075ed` on slave agent
+- ✅ Test — `2 passed` (pytest)
+- ✅ Build — `emekaezedozie276/flask-app:7` built via Docker
+- ✅ Scan — Trivy 0.71.2 ran, no patchable CRITICALs, report archived
+- ✅ Push — image pushed to Docker Hub
+- ✅ Update Manifest — image tag updated in `kubernetes/overlays/dev/deployment-patch.yaml`
+- ✅ Publish Manifest — `git push` with `[skip ci]` commit back to `main`
+- ✅ Result: `Finished: SUCCESS`
 
 ---
 
@@ -198,7 +218,7 @@ flask-cicd-gitops-platform/
 
 ---
 
-> 🔄 This document is updated as each stage completes. Current position: **Stage 5 done — Stage 6 in progress.**
+> 🔄 This document is updated as each stage completes. Current position: **Stage 6 done — Stage 7 next.**
 
 ## 👤 Author
 
