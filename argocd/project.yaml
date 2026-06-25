@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: flask-cicd-gitops-project
+  namespace: argocd
+spec:
+  description: ArgoCD project for Flask CI/CD GitOps platform
+
+  sourceRepos:
+    - https://github.com/Ike-DevCloudIQ/flask-cicd-gitops-platform.git
+
+  destinations:
+    - namespace: flask-app
+      server: https://kubernetes.default.svc
+
+  clusterResourceWhitelist:
+    - group: "*"
+      kind: "*"
+
+  namespaceResourceWhitelist:
+    - group: "*"
+      kind: "*"
+
+  orphanedResources:
+    warn: true
