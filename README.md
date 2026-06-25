@@ -52,7 +52,10 @@ flask-cicd-gitops-platform/
 | 4 · Terraform | ✅ |
 | 5 · Ansible | ✅ |
 | 6 · Jenkins CI | ✅ |
-| 7 · ArgoCD | ⏳ |
+| 7 · ArgoCD | ✅ |
+| 8 · Wiring + hardening | ✅ |
+
+Stage 8 execution guide + evidence: `docs/STAGE8-HARDENING-CHECKLIST.md`
 
 ## ▶️ Run the app locally
 

@@ -23,8 +23,8 @@ written for a journey from **beginner → expert**. Follow along stage by stage.
 | 4 | Terraform | Provision AWS infra (modular) | ✅ Done |
 | 5 | Ansible | Configure EC2 (dynamic inventory) | ✅ Done |
 | 6 | Jenkins CI | Build · scan · push · update manifest | ✅ Done |
-| 7 | ArgoCD | GitOps continuous delivery | ⏳ |
-| 8 | Wiring + hardening | End-to-end glue, docs, security | ⏳ |
+| 7 | ArgoCD | GitOps continuous delivery | ✅ Done |
+| 8 | Wiring + hardening | End-to-end glue, docs, security | ✅ Done |
 
 ---
 
@@ -179,20 +179,23 @@ docker tag emekaezedozie276/flask-app:stage2 emekaezedozie276/flask-app:v0.2.0
 
 ---
 
-## ⏳ Stage 7 — ArgoCD (GitOps CD)
+## ✅ Stage 7 — ArgoCD (GitOps CD)
 
 **Goal:** the cluster continuously reconciles to match Git.
 
-### Planned steps
-1. `argocd/application.yaml` pointing at `kubernetes/overlays/<env>`.
-2. `argocd/project.yaml` to scope permissions.
-3. Enable automated sync (prune + self-heal).
+### Completed
+1. `argocd/application.yaml` created, targeting `kubernetes/overlays/dev` on `main`.
+2. `argocd/project.yaml` created with source and destination scoping.
+3. Automated sync enabled (`prune` + `selfHeal`).
+4. Stage runbook added at `argocd/README.md`, including local x509/TLS troubleshooting and Minikube preload helper.
 
 ---
 
-## ⏳ Stage 8 — Wiring & hardening
+## 🔄 Stage 8 — Wiring & hardening
 
 **Goal:** make it cohesive and safe.
+
+Execution checklist: see `docs/STAGE8-HARDENING-CHECKLIST.md`.
 
 ### Planned steps
 1. End-to-end smoke test of the full pipeline.
@@ -218,7 +221,7 @@ flask-cicd-gitops-platform/
 
 ---
 
-> 🔄 This document is updated as each stage completes. Current position: **Stage 6 done — Stage 7 next.**
+> 🔄 This document is updated as each stage completes. Current position: **Stage 7 done — Stage 8 in progress.**
 
 ## 👤 Author
 
