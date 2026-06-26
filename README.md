@@ -38,7 +38,7 @@ A production-style DevOps platform that takes a Python Flask service from a Git 
 
 ![Project Architecture](images/project-architecture.jpeg)
 
-A short video demo of the end-to-end flow is included at [`images/Demo Video.mov`](images/Demo%20Video.mov).
+A short video demo of the end-to-end flow is included at [`images/Demo Video.mp4`](images/Demo%20Video.mp4).
 
 ### Logical runtime flow
 
@@ -429,7 +429,7 @@ Push any change to `main`; the GitHub webhook starts Jenkins. Watch the build, t
 | Evidence | File |
 |---|---|
 | Architecture diagram | [project-architecture.jpeg](images/project-architecture.jpeg) |
-| Demo video | [Demo Video.mov](images/Demo%20Video.mov) |
+| Demo video | [Demo Video.mp4](images/Demo%20Video.mp4) |
 | Repository structure | [Repository structure i.png](images/Repository%20structure%20i.png) |
 | Terraform apply | [Terraform apply.png](images/Terraform%20apply.png) |
 | EC2 running | [EC2 running.png](images/EC2%20running.png) |
