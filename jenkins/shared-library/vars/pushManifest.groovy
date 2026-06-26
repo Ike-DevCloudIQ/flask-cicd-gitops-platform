@@ -5,24 +5,20 @@
  * This is the GitOps trigger: once the manifest lands on main, ArgoCD
  * detects the image tag change and rolls out the new version automatically.
  *
- * Git credentials are stored in Jenkins as a "Username with password" secret
- * (ID: github-credentials) where the password is a GitHub Personal Access Token.
+ * Uses SSH key-based authentication (github_deploy_key) for secure Git operations.
+ * The private key is stored on the Jenkins master at /var/lib/jenkins/.ssh/github_deploy_key
  *
  * @param buildNum       Jenkins build number (used in the commit message)
- * @param credentialsId  Jenkins credentials ID for GitHub access
  */
-def call(String buildNum, String credentialsId = 'github-credentials') {
-    withCredentials([usernamePassword(
-        credentialsId: credentialsId,
-        usernameVariable: 'GIT_USER',
-        passwordVariable: 'GIT_TOKEN'
-    )]) {
-        sh """
-            git config user.email "jenkins@flask-cicd-gitops-platform"
-            git config user.name  "Jenkins CI"
-            git add kubernetes/overlays/dev/deployment-patch.yaml
-            git diff --cached --quiet || git commit -m "ci: update image tag to build-${buildNum} [skip ci]"
-            git push https://\${GIT_USER}:\${GIT_TOKEN}@github.com/Ike-DevCloudIQ/flask-cicd-gitops-platform.git HEAD:main
-        """
-    }
+def call(String buildNum) {
+    sh """
+        # Configure Git SSH with Jenkins deploy key
+        export GIT_SSH_COMMAND="ssh -i /var/lib/jenkins/.ssh/github_deploy_key -o StrictHostKeyChecking=accept-new"
+        
+        git config user.email "jenkins@flask-cicd-gitops-platform"
+        git config user.name  "Jenkins CI"
+        git add kubernetes/overlays/dev/deployment-patch.yaml
+        git diff --cached --quiet || git commit -m "ci: update image tag to build-${buildNum} [skip ci]"
+        git push git@github.com:Ike-DevCloudIQ/flask-cicd-gitops-platform.git HEAD:main
+    """
 }
