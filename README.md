@@ -38,7 +38,13 @@ A production-style DevOps platform that takes a Python Flask service from a Git 
 
 ![Project Architecture](images/project-architecture.jpeg)
 
-A short video demo of the end-to-end flow is included at [`images/Demo Video.mp4`](images/Demo%20Video.mp4).
+A short end-to-end demo video is embedded below.
+
+<video controls width="100%" preload="metadata">
+  <source src="https://github.com/Ike-DevCloudIQ/flask-cicd-gitops-platform/raw/main/images/Demo%20Video.mp4" type="video/mp4">
+  Your browser cannot play this video inline. Use this link instead:
+  <a href="images/Demo%20Video.mp4">Demo Video.mp4</a>
+</video>
 
 ### Logical runtime flow
 
