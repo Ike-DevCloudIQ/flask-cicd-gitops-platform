@@ -17,3 +17,15 @@
   ansible.builtin.dnf:
     name: java-17-amazon-corretto-headless
     state: present
+
+- name: Download Trivy vulnerability scanner
+  ansible.builtin.shell: |
+    curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
+  args:
+    creates: /usr/local/bin/trivy
+  retries: 3
+  delay: 5
+
+- name: Verify Trivy installation
+  ansible.builtin.command: trivy version
+  changed_when: false
