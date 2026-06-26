@@ -14,11 +14,12 @@ A production-style DevOps platform that takes a Python Flask service from a Git 
 3. [Tech Stack](#tech-stack)
 4. [The 8 Stages](#the-8-stages)
 5. [End-to-End Delivery Flow](#end-to-end-delivery-flow)
-6. [Replication Walkthrough](#replication-walkthrough)
-7. [Evidence Gallery](#evidence-gallery)
-8. [Operational Runbook](#operational-runbook)
-9. [Known Limitations & Mitigations](#known-limitations--mitigations)
-10. [Recruiter / Interview Defense Notes](#recruiter--interview-defense-notes)
+6. [Demo Video](#demo-video)
+7. [Walkthrough](#walkthrough)
+8. [Evidence Gallery](#evidence-gallery)
+9. [Operational Runbook](#operational-runbook)
+10. [Known Limitations & Mitigations](#known-limitations--mitigations)
+11. [My Notes](#my-notes)
 
 ---
 
@@ -37,14 +38,6 @@ A production-style DevOps platform that takes a Python Flask service from a Git 
 ## Architecture
 
 ![Project Architecture](images/project-architecture.jpeg)
-
-A short end-to-end demo video is embedded below.
-
-<video controls width="100%" preload="metadata">
-  <source src="https://github.com/Ike-DevCloudIQ/flask-cicd-gitops-platform/raw/main/images/Demo%20Video.mp4" type="video/mp4">
-  Your browser cannot play this video inline. Use this link instead:
-  <a href="images/Demo%20Video.mp4">Demo Video.mp4</a>
-</video>
 
 ### Logical runtime flow
 
@@ -336,6 +329,16 @@ What was validated:
 
 ---
 
+## Demo Video
+
+The demo is shown inline below using GIF format (GitHub renders this reliably without forcing download).
+
+![End-to-End Demo](images/Demo%20Video.gif)
+
+If you want the full-quality recording with audio, open [Demo Video.mp4](images/Demo%20Video.mp4).
+
+---
+
 ## Walkthrough
 
 ### Prerequisites
@@ -435,7 +438,8 @@ Push any change to `main`; the GitHub webhook starts Jenkins. Watch the build, t
 | Evidence | File |
 |---|---|
 | Architecture diagram | [project-architecture.jpeg](images/project-architecture.jpeg) |
-| Demo video | [Demo Video.mp4](images/Demo%20Video.mp4) |
+| Demo video (inline preview) | [Demo Video.gif](images/Demo%20Video.gif) |
+| Demo video (full quality) | [Demo Video.mp4](images/Demo%20Video.mp4) |
 | Repository structure | [Repository structure i.png](images/Repository%20structure%20i.png) |
 | Terraform apply | [Terraform apply.png](images/Terraform%20apply.png) |
 | EC2 running | [EC2 running.png](images/EC2%20running.png) |
