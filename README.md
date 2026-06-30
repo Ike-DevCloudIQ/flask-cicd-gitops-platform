@@ -517,9 +517,6 @@ The build number gives a deterministic, traceable tag tied to a specific Jenkins
 **How would this go to real production?**
 Run on managed Kubernetes (e.g. EKS) instead of local Minikube, add an ingress with TLS termination, move secrets to a sealed/managed store, and layer in metrics/logs/tracing. The pipeline and GitOps model stay exactly the same — only the destination cluster and a few hardening layers change.
 
-**Local vs AWS — where does `127.0.0.1:5000` come from?**
-That’s the Flask service on **local Minikube**, reached via `kubectl port-forward`. AWS hosts the **Jenkins CI** controller (master/slave EC2). They’re intentionally separate: the local cluster is the demo deployment target; AWS is the CI plane.
-
 ---
 
 ## Repository Layout
